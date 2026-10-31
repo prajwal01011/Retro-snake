@@ -4,6 +4,7 @@
   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
       "version": "0.2.0",
       "configurations": [
+        
         {
           "name": "Debug",
           "type": "cppdbg",
@@ -12,7 +13,16 @@
           "args": [],
           "stopAtEntry": false,
           "cwd": "${workspaceFolder}",
-          "environment": [],
+          "environment": [
+          {
+          "name": "__NV_PRIME_RENDER_OFFLOAD",
+          "value": "1"
+            },
+            {
+          "name": "__GLX_VENDOR_LIBRARY_NAME",
+          "value": "nvidia"
+          }
+          ],
           "externalConsole": false,
           "MIMode": "gdb",
           "setupCommands": [
@@ -40,7 +50,15 @@
           "args": [],
           "stopAtEntry": false,
           "cwd": "${workspaceFolder}",
-          "environment": [],
+          "environment": [    
+          {
+          "name": "__NV_PRIME_RENDER_OFFLOAD",
+          "value": "1"
+          },
+          {
+          "name": "__GLX_VENDOR_LIBRARY_NAME",
+          "value": "nvidia"
+          }],
           "externalConsole": false,
           "program": "${workspaceFolder}/${fileBasenameNoExtension}",
           "MIMode": "gdb",
