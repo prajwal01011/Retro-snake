@@ -3,14 +3,25 @@
 #include <deque>
 #include <raymath.h>
 
-using namespace std;
-Color Green = { 173, 204, 96, 255};
-Color dark_Green = { 43, 51, 24, 255};
+    using namespace std;
+    Color Green = { 173, 204, 96, 255};
+    Color dark_Green = { 43, 51, 24, 255};
 
-int cell_size = 30;
-int cellCount = 25;
+    int cell_size = 30;
+    int cellCount = 25;
 
-double lastUpdateTime = 0;
+    double lastUpdateTime = 0;
+
+bool ElementInDeque(Vector2 element, deque<Vector2>deque){
+
+    for (unsigned int i=0; i < deque.size(); i++){
+        if(Vector2Equals(deque[i], element)){
+                return true;
+        }
+    }
+    return false;
+
+}
 
 bool eventTriggered(double Interval){
     double CurrentTime = GetTime();
@@ -19,7 +30,7 @@ bool eventTriggered(double Interval){
         return true;
     }
     return false;
-}
+ }
 
 class Snake{
     
@@ -53,11 +64,11 @@ class Food{
     Vector2 position;
     Texture2D texture;
 
-    Food(){
+    Food(deque<Vector2>snakeBody){
         Image image = LoadImage("Graphics/food.png");
         texture = LoadTextureFromImage(image);
         UnloadImage(image);
-        position = RandomPosition();
+        position = RandomPosition(snakeBody);
     }
     ~Food(){
         UnloadTexture(texture);
@@ -68,11 +79,29 @@ class Food{
 
     }
 
-    Vector2 RandomPosition(){
+    Vector2 GetRandomCell(){
         float x = GetRandomValue(0, cellCount-1);
         float y = GetRandomValue(0, cellCount -1);
+        
         return Vector2{x,y};
     }
+
+    
+
+    Vector2 RandomPosition(deque<Vector2> snakeBody){
+        
+        Vector2 position = GetRandomCell();
+
+        while(ElementInDeque(position, snakeBody)){
+            position = GetRandomCell();
+
+        }
+        return position;
+    }
+        
+
+        
+       
 };
 
 class Game{
@@ -81,7 +110,7 @@ class Game{
     public:
 
     Snake snake = Snake();
-    Food food = Food();
+    Food food = Food(snake.body);
 
 
     void Draw(){
@@ -92,6 +121,18 @@ class Game{
     void update(){
 
         snake.update();
+        eatFood();
+    }
+
+    void eatFood(){
+
+        if(Vector2Equals(snake.body[0], food.position)){
+
+            
+            food.position = food.RandomPosition(snake.body);
+            
+        }
+
     }
 
 
