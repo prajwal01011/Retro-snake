@@ -260,7 +260,7 @@ int main(){
         
         if (game.running == false) {
         DrawRectangle(offset -5, offset -5,  760, 760, BLACK);
-        DrawText("YOU DIED" , 350, 150, 40, WHITE);
+        DrawText("GAME OVER" , 330, 150, 40, WHITE);
         DrawText(TextFormat("%i",game.score), 420, 450, 40, WHITE);
         DrawText("SCORE",370, 500, 40, WHITE);
         DrawText("PRESS SPACE [ _ ] TO restart",260, 700, 25, WHITE);
