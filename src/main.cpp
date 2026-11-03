@@ -3,14 +3,14 @@
 #include <deque>
 #include <raymath.h>
 
-    using namespace std;
-    Color Green = { 173, 204, 96, 255};
-    Color dark_Green = { 43, 51, 24, 255};
+using namespace std;
+Color Green = { 173, 204, 96, 255};
+Color dark_Green = { 43, 51, 24, 255};
 
-    int cell_size = 30;
-    int cellCount = 25;
+int cell_size = 30;
+int cellCount = 25;
 
-    double lastUpdateTime = 0;
+double lastUpdateTime = 0;
 
 bool ElementInDeque(Vector2 element, deque<Vector2>deque){
 
@@ -38,7 +38,7 @@ class Snake{
     public:
     deque<Vector2> body = {Vector2{6,9},Vector2{5,9}, Vector2{4,9}};
     Vector2 direction = {1, 0};
-
+    bool addsegment = false;
 
 
     void Draw(){
@@ -51,8 +51,17 @@ class Snake{
     }
     
     void update(){
-        body.pop_back();
+
         body.push_front(Vector2Add(body[0], direction));
+
+        if (addsegment == true){
+            
+            addsegment = false;
+        }
+        else{
+
+            body.pop_back();
+        }
 
     }
 
@@ -130,6 +139,7 @@ class Game{
 
             
             food.position = food.RandomPosition(snake.body);
+            snake.addsegment = true;
             
         }
 
