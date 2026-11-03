@@ -64,6 +64,11 @@ class Snake{
         }
 
     }
+    
+    void Reset(){
+        body = {Vector2{6,9}, Vector2{5,9}, Vector2{4,9}};
+        direction = {1,0};
+    }
 
 };
 
@@ -77,7 +82,7 @@ class Food{
         Image image = LoadImage("Graphics/food.png");
         texture = LoadTextureFromImage(image);
         UnloadImage(image);
-        position = RandomPosition(snakeBody);
+        position = GetRandomPosition(snakeBody);
     }
     ~Food(){
         UnloadTexture(texture);
@@ -97,7 +102,7 @@ class Food{
 
     
 
-    Vector2 RandomPosition(deque<Vector2> snakeBody){
+    Vector2 GetRandomPosition(deque<Vector2> snakeBody){
         
         Vector2 position = GetRandomCell();
 
@@ -120,6 +125,7 @@ class Game{
 
     Snake snake = Snake();
     Food food = Food(snake.body);
+    bool running = true;
 
 
     void Draw(){
@@ -129,8 +135,14 @@ class Game{
 
     void update(){
 
-        snake.update();
-        eatFood();
+        if(running == true){
+            
+            snake.update();
+            eatFood();
+            checkCollisionWithEdge();
+            checkCollisionWithTail();
+        }
+
     }
 
     void eatFood(){
@@ -138,13 +150,44 @@ class Game{
         if(Vector2Equals(snake.body[0], food.position)){
 
             
-            food.position = food.RandomPosition(snake.body);
+            food.position = food.GetRandomPosition(snake.body);
             snake.addsegment = true;
             
         }
 
     }
+    void checkCollisionWithEdge(){
+	
+	
+	if(snake.body[0].x == cellCount || snake.body[0].x == -1){
 
+	GameOver();
+
+
+	}
+	
+	if(snake.body[0].y == cellCount || snake.body[0].y == -1){
+
+	GameOver();	
+	
+	}
+
+    }
+
+    void GameOver(){
+        snake.Reset();
+        food.position = food.GetRandomPosition(snake.body);
+        running= false;
+	
+    }
+    void checkCollisionWithTail(){
+        deque<Vector2>headlessBody = snake.body;
+        headlessBody.pop_front();
+        if(ElementInDeque(snake.body[0], headlessBody)){
+            GameOver();
+
+        }
+    }
 
 
 
@@ -165,20 +208,31 @@ int main(){
             game.update();
          }       
         
-        
-         if(IsKeyPressed(KEY_UP ) && game.snake.direction.y != 1){
-            game.snake.direction = {0, -1};
+        if(game.running == true){
+       
+    
+            if(IsKeyPressed(KEY_UP ) && game.snake.direction.y != 1){
+                game.snake.direction = {0, -1};
             
-         }
-         if(IsKeyPressed(KEY_DOWN ) && game.snake.direction.y != -1){
-            game.snake.direction = {0, 1};
-         }
-         if(IsKeyPressed(KEY_LEFT ) && game.snake.direction.x != 1){
-            game.snake.direction = {-1, 0};
-         }
-         if(IsKeyPressed(KEY_RIGHT)  && game.snake.direction.x != -1){
-            game.snake.direction = {1, 0};
-         }
+            }
+            if(IsKeyPressed(KEY_DOWN ) && game.snake.direction.y != -1){
+                game.snake.direction = {0, 1};
+            }
+            if(IsKeyPressed(KEY_LEFT ) && game.snake.direction.x != 1){
+                game.snake.direction = {-1, 0};
+            }
+            if(IsKeyPressed(KEY_RIGHT)  && game.snake.direction.x != -1){
+                game.snake.direction = {1, 0};
+            }
+    
+        }
+        else{
+            if (IsKeyPressed(KEY_SPACE)) 
+            {
+                game.running = true;
+            }
+        }
+   
 
 
         
