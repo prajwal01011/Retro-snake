@@ -130,6 +130,21 @@ class Game{
     Food food = Food(snake.body);
     bool running = true;
     int score = 0;
+    Sound eatSound;
+    Sound wallSound;
+
+    Game(){
+
+        InitAudioDevice();
+        eatSound = LoadSound("sounds/eat.mp3");
+        wallSound = LoadSound("sounds/wall.mp3");
+
+    }
+    ~Game(){
+        UnloadSound(eatSound);
+        UnloadSound(wallSound);
+        CloseAudioDevice();
+    }
 
     void Draw(){
         food.Draw();
@@ -155,6 +170,7 @@ class Game{
             
             food.position = food.GetRandomPosition(snake.body);
             snake.addsegment = true;
+            PlaySound(eatSound);
             score ++;
             
         }
@@ -166,7 +182,7 @@ class Game{
 	if(snake.body[0].x == cellCount || snake.body[0].x == -1){
 
 	GameOver();
-
+        
 
 	}
 	
@@ -180,7 +196,7 @@ class Game{
 
     void GameOver(){
         snake.Reset();
-        
+        PlaySound(wallSound);
         food.position = food.GetRandomPosition(snake.body);
         running= false;
         
